@@ -1,21 +1,42 @@
-Basic authentication is a simple method of user authentication used in HTTP protocol. It involves sending the username and password credentials as a Base64-encoded string in the header of an HTTP request. Here's a brief overview of how Basic authentication works:
+# Simple API
 
-1. Client Request: The client (e.g., web browser or API client) includes the following header in the HTTP request:
+Simple HTTP API for playing with `User` model.
 
-   ```
-   Authorization: Basic <Base64 encoded username:password>
-   ```
 
-   The `<Base64 encoded username:password>` is the Base64-encoded string of the user's credentials, where the username and password are concatenated with a colon (`:`) separator.
+## Files
 
-2. Server Processing: When the server receives the request, it extracts the Base64-encoded credentials from the `Authorization` header.
+### `models/`
 
-3. Decoding Credentials: The server decodes the Base64-encoded string to retrieve the username and password.
+- `base.py`: base of all models of the API - handle serialization to file
+- `user.py`: user model
 
-4. Authentication: The server then verifies the username and password against the user records stored in its authentication system (such as a user database). If the credentials match, the server grants access to the requested resource. Otherwise, it returns an appropriate error response (e.g., HTTP 401 Unauthorized).
+### `api/v1`
 
-It's important to note that Basic authentication is considered relatively insecure, as the credentials are sent in plaintext over the network. Therefore, it is recommended to use secure protocols such as HTTPS to encrypt the communication and prevent unauthorized interception of credentials.
+- `app.py`: entry point of the API
+- `views/index.py`: basic endpoints of the API: `/status` and `/stats`
+- `views/users.py`: all users endpoints
 
-Additionally, when implementing Basic authentication, it is crucial to store the passwords securely, such as using salted hashes, to protect user credentials in case of a data breach.
 
-Overall, Basic authentication provides a straightforward method for user authentication in HTTP-based applications but should be used with caution and supplemented with additional security measures when handling sensitive data.
+## Setup
+
+```
+$ pip3 install -r requirements.txt
+```
+
+
+## Run
+
+```
+$ API_HOST=0.0.0.0 API_PORT=5000 python3 -m api.v1.app
+```
+
+
+## Routes
+
+- `GET /api/v1/status`: returns the status of the API
+- `GET /api/v1/stats`: returns some stats of the API
+- `GET /api/v1/users`: returns the list of users
+- `GET /api/v1/users/:id`: returns an user based on the ID
+- `DELETE /api/v1/users/:id`: deletes an user based on the ID
+- `POST /api/v1/users`: creates a new user (JSON parameters: `email`, `password`, `last_name` (optional) and `first_name` (optional))
+- `PUT /api/v1/users/:id`: updates an user based on the ID (JSON parameters: `last_name` and `first_name`)
